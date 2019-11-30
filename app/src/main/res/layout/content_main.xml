@@ -8,10 +8,35 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <LinearLayout
+        android:id="@+id/no_scans_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/no_scans_textview"
+            android:layout_width="0dp"
+            android:layout_weight="0.88"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="@string/details" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.12"
+            app:srcCompat="@drawable/ic_arrow_upward_black_24dp" />
+
+    </LinearLayout>
+
     <ListView
         android:id="@+id/my_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp" />
+        tools:layout_editor_absoluteY="1dp" >
+
+    </ListView>
 </androidx.constraintlayout.widget.ConstraintLayout>

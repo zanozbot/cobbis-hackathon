@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import java.util.ArrayList;
 import retrofit2.Call;
@@ -22,6 +23,8 @@ public class MainActivity extends AppCompatActivity{
     private static String TAG = "COBBIS_HACKATHON";
     private CobbisService cobbisService;
     private ListView listView;
+    private LinearLayout mLinearLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,8 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mLinearLayout = findViewById(R.id.no_scans_layout);
 
         listView = findViewById(R.id.my_list_view);
         ArrayList<DataModel> list = new ArrayList<DataModel>();
@@ -52,7 +57,15 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        CustomArrayAdapter mAdapter = new CustomArrayAdapter(this, DataSingleton.instance.getState());
+        ArrayList<DataModel> dataModels = DataSingleton.instance.getState();
+
+        if (dataModels.size() > 0) {
+            this.mLinearLayout.setVisibility(View.INVISIBLE);
+        } else {
+            this.mLinearLayout.setVisibility(View.VISIBLE);
+        }
+
+        CustomArrayAdapter mAdapter = new CustomArrayAdapter(this, dataModels);
         listView.setAdapter(mAdapter);
         super.onActivityResult(requestCode, resultCode, data);
     }

@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">Cobbis Popis</string>
-    <string name="action_start">Start</string>
-    <string name="action_stop">Stop</string>
+    <string name="app_name">Cobbis - Popis inventure</string>
+    <string name="action_start">Začni</string>
+    <string name="action_stop">Prenehaj</string>
     <string name="action_more">Preglej</string>
+    <string name="details">Začni s skeniranjem.\nSpodaj se bodo prikazale skenirane vsebine.</string>
+
 </resources>
