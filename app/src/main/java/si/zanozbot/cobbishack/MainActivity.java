@@ -2,20 +2,17 @@ package si.zanozbot.cobbishack;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.nfc.Tag;
 import android.os.Bundle;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import android.widget.ListView;
+import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -24,6 +21,7 @@ public class MainActivity extends AppCompatActivity{
 
     private static String TAG = "COBBIS_HACKATHON";
     private CobbisService cobbisService;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +29,13 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        listView = findViewById(R.id.my_list_view);
+        ArrayList<String> list = new ArrayList<String>();
+        DataSingleton.instance.setState(list);
+
+        CustomArrayAdapter mAdapter = new CustomArrayAdapter(this, DataSingleton.instance.getState());
+        listView.setAdapter(mAdapter);
 
         // Initialization of Cobbis Service
         cobbisService = RetrofitClientInstance.getRetrofitInstance().create(CobbisService.class);
@@ -40,9 +45,16 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, Scanner.class);
-                startActivity(intent);
+                startActivityForResult(intent, 100);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        CustomArrayAdapter mAdapter = new CustomArrayAdapter(this, DataSingleton.instance.getState());
+        listView.setAdapter(mAdapter);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -58,8 +70,9 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onResponse(Call<CobbisModel> call, Response<CobbisModel> response) {
                 Log.d(TAG, response.message());
+                DataSingleton.instance.resetState();
                 Intent intent = new Intent(MainActivity.this, Scanner.class);
-                startActivity(intent);
+                startActivityForResult(intent, 100);
 
             }
 

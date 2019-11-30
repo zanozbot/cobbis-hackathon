@@ -66,12 +66,13 @@ public class Scanner extends AppCompatActivity implements ZBarScannerView.Result
         mScannerView.stopCamera();           // Stop camera on pause
     }
 
-    private void sendScannedCode(String number) {
+    private void sendScannedCode(final String number) {
         Call<CobbisModel> call = cobbisService.scan(number);
         call.enqueue(new Callback<CobbisModel>() {
             @Override
             public void onResponse(Call<CobbisModel> call, Response<CobbisModel> response) {
                 handleResponseStatus(response.body());
+                updateData(response.body(), number);
             }
 
             @Override
@@ -107,6 +108,12 @@ public class Scanner extends AppCompatActivity implements ZBarScannerView.Result
         mScannerView.resumeCameraPreview(this);
     }
 
+    private void updateData(CobbisModel model, String number) {
+        ArrayList<String> list = DataSingleton.instance.getState();
+        list.add(number);
+        DataSingleton.instance.setState(list);
+    }
+
     private void showNumber(String number) {
         View parentLayout = findViewById(android.R.id.content);
         Snackbar snackbar = Snackbar.make(parentLayout, "Prebrana številka: " + number, Snackbar.LENGTH_INDEFINITE)
@@ -114,6 +121,7 @@ public class Scanner extends AppCompatActivity implements ZBarScannerView.Result
                     @Override
                     public void onClick(View v) {
                         mScannerView.stopCamera();
+                        setResult(RESULT_OK);
                         finish();
                     }
                 });
