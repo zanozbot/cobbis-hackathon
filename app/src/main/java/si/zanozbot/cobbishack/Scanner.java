@@ -7,8 +7,13 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,14 +76,48 @@ public class Scanner extends AppCompatActivity implements ZBarScannerView.Result
 
             @Override
             public void onFailure(Call<CobbisModel> call, Throwable t) {
-
+                MediaPlayer sound = MediaPlayer.create(Scanner.this, R.raw.napaka);
+                sound.start();
             }
         });
     }
 
     private void handleResponseStatus(CobbisModel response) {
         Log.d(TAG, response.getStatus().toString());
+
+        MediaPlayer sound = MediaPlayer.create(Scanner.this, R.raw.napaka);
+
+        switch (response.getStatus()) {
+            case 0: {
+                sound = MediaPlayer.create(Scanner.this, R.raw.ok);
+                break;
+            }
+            case 12: {
+                sound = MediaPlayer.create(Scanner.this, R.raw.izposojeno);
+                break;
+            }
+            case 11: {
+                sound = MediaPlayer.create(Scanner.this, R.raw.duplikat);
+                break;
+            }
+        }
+
+        sound.start();
+
         mScannerView.resumeCameraPreview(this);
+    }
+
+    private void showNumber(String number) {
+        View parentLayout = findViewById(android.R.id.content);
+        Snackbar snackbar = Snackbar.make(parentLayout, "Prebrana številka: " + number, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.action_more, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mScannerView.stopCamera();
+                        finish();
+                    }
+                });
+        snackbar.show();
     }
 
     @Override
@@ -90,6 +129,7 @@ public class Scanner extends AppCompatActivity implements ZBarScannerView.Result
             number = number.substring(0, number.length() - 1);
         }
 
+        this.showNumber(number);
         this.sendScannedCode(number);
     }
 }

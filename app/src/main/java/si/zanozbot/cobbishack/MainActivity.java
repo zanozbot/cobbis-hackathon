@@ -1,6 +1,7 @@
 package si.zanozbot.cobbishack;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.nfc.Tag;
 import android.os.Bundle;
 
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity{
 
             @Override
             public void onFailure(Call<CobbisModel> call, Throwable t) {
-
+                playError();
             }
         });
     }
@@ -79,9 +80,14 @@ public class MainActivity extends AppCompatActivity{
 
             @Override
             public void onFailure(Call<CobbisModel> call, Throwable t) {
-
+                playError();
             }
         });
+    }
+
+    private void playError() {
+        MediaPlayer sound = MediaPlayer.create(MainActivity.this, R.raw.napaka);
+        sound.start();
     }
 
     @Override
@@ -98,7 +104,7 @@ public class MainActivity extends AppCompatActivity{
         }
 
         if (id == R.id.action_stop) {
-            this.startScanning();
+            this.stopScanning();
             return true;
         }
 
