@@ -109,8 +109,8 @@ public class Scanner extends AppCompatActivity implements ZBarScannerView.Result
     }
 
     private void updateData(CobbisModel model, String number) {
-        ArrayList<String> list = DataSingleton.instance.getState();
-        list.add(number);
+        ArrayList<DataModel> list = DataSingleton.instance.getState();
+        list.add(new DataModel(model.getMessage(), number));
         DataSingleton.instance.setState(list);
     }
 

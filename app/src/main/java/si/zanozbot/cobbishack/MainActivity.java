@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity{
         setSupportActionBar(toolbar);
 
         listView = findViewById(R.id.my_list_view);
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<DataModel> list = new ArrayList<DataModel>();
         DataSingleton.instance.setState(list);
 
         CustomArrayAdapter mAdapter = new CustomArrayAdapter(this, DataSingleton.instance.getState());

@@ -14,12 +14,12 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomArrayAdapter extends ArrayAdapter<String> {
+public class CustomArrayAdapter extends ArrayAdapter<DataModel> {
 
     private Context mContext;
-    private List<String> mList = new ArrayList<>();
+    private List<DataModel> mList = new ArrayList<DataModel>();
 
-    public CustomArrayAdapter(@NonNull Context context, ArrayList<String> list) {
+    public CustomArrayAdapter(@NonNull Context context, List<DataModel> list) {
         super(context, 0, list);
         mContext = context;
         mList = list;
@@ -32,10 +32,13 @@ public class CustomArrayAdapter extends ArrayAdapter<String> {
         if(listItem == null)
             listItem = LayoutInflater.from(mContext).inflate(R.layout.custom_list_item,parent,false);
 
-        String curr = mList.get(position);
+        DataModel curr = mList.get(position);
 
         TextView number = listItem.findViewById(R.id.textView);
-        number.setText(curr);
+        number.setText(curr.getNumber());
+
+        TextView message = listItem.findViewById(R.id.message);
+        message.setText(curr.getMessage());
 
         return listItem;
     }
