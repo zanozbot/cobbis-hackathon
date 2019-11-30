@@ -14,6 +14,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Scanner"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:screenOrientation="portrait">
         </activity>
         <activity
