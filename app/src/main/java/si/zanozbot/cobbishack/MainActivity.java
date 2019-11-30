@@ -22,6 +22,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity{
 
     private static String TAG = "COBBIS_HACKATHON";
+    private CobbisService cobbisService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,19 +31,8 @@ public class MainActivity extends AppCompatActivity{
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        CobbisService service = RetrofitClientInstance.getRetrofitInstance().create(CobbisService.class);
-        Call<CobbisModel> call = service.start();
-        call.enqueue(new Callback<CobbisModel>() {
-            @Override
-            public void onResponse(Call<CobbisModel> call, Response<CobbisModel> response) {
-                Log.d(TAG, response.message());
-            }
-
-            @Override
-            public void onFailure(Call<CobbisModel> call, Throwable t) {
-
-            }
-        });
+        // Initialization of Cobbis Service
+        cobbisService = RetrofitClientInstance.getRetrofitInstance().create(CobbisService.class);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -61,6 +51,39 @@ public class MainActivity extends AppCompatActivity{
         return true;
     }
 
+    private void startScanning() {
+        Call<CobbisModel> call = cobbisService.start();
+        call.enqueue(new Callback<CobbisModel>() {
+            @Override
+            public void onResponse(Call<CobbisModel> call, Response<CobbisModel> response) {
+                Log.d(TAG, response.message());
+                Intent intent = new Intent(MainActivity.this, Scanner.class);
+                startActivity(intent);
+
+            }
+
+            @Override
+            public void onFailure(Call<CobbisModel> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void stopScanning() {
+        Call<CobbisModel> call = cobbisService.stop();
+        call.enqueue(new Callback<CobbisModel>() {
+            @Override
+            public void onResponse(Call<CobbisModel> call, Response<CobbisModel> response) {
+                Log.d(TAG, response.message());
+            }
+
+            @Override
+            public void onFailure(Call<CobbisModel> call, Throwable t) {
+
+            }
+        });
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -69,7 +92,13 @@ public class MainActivity extends AppCompatActivity{
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_start) {
+            this.startScanning();
+            return true;
+        }
+
+        if (id == R.id.action_stop) {
+            this.startScanning();
             return true;
         }
 
