@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity{
     private CobbisService cobbisService;
     private ListView listView;
     private LinearLayout mLinearLayout;
-
+    private FloatingActionButton mFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +47,16 @@ public class MainActivity extends AppCompatActivity{
         // Initialization of Cobbis Service
         cobbisService = RetrofitClientInstance.getRetrofitInstance().create(CobbisService.class);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        mFab = findViewById(R.id.fab);
+        mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Scanner.class);
-                startActivityForResult(intent, 100);
+                if (DataSingleton.instance.getState().size() > 0) {
+                    Intent intent = new Intent(MainActivity.this, Scanner.class);
+                    startActivityForResult(intent, 100);
+                } else {
+                    startScanning();
+                }
             }
         });
     }
@@ -88,7 +92,6 @@ public class MainActivity extends AppCompatActivity{
                 DataSingleton.instance.resetState();
                 Intent intent = new Intent(MainActivity.this, Scanner.class);
                 startActivityForResult(intent, 100);
-
             }
 
             @Override
