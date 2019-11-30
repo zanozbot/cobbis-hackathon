@@ -56,6 +56,9 @@ public class Scanner extends AppCompatActivity implements ZBarScannerView.Result
     @Override
     public void handleResult(Result rawResult) {
         Log.v(TAG, rawResult.getContents()); // Prints scan results
+
+
+
         mScannerView.resumeCameraPreview(this);
     }
 }
