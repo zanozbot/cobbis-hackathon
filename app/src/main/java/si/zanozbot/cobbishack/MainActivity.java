@@ -108,6 +108,8 @@ public class MainActivity extends AppCompatActivity{
             public void onResponse(Call<CobbisModel> call, Response<CobbisModel> response) {
                 if (response.body().getStatus() == 21) {
                     Toast.makeText(MainActivity.this, "Vse kode niso bile skenirane.", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "Skeniranje se je zaključilo.", Toast.LENGTH_LONG).show();
                 }
             }
 
