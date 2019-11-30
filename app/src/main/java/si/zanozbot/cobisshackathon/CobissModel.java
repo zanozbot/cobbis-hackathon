@@ -1,8 +1,8 @@
-package si.zanozbot.cobbishack;
+package si.zanozbot.cobisshackathon;
 
 import com.google.gson.annotations.SerializedName;
 
-public class CobbisModel {
+public class CobissModel {
 
     @SerializedName("status")
     private Integer status;
@@ -10,7 +10,7 @@ public class CobbisModel {
     @SerializedName("message")
     private String message;
 
-    public CobbisModel(Integer status, String message) {
+    public CobissModel(Integer status, String message) {
         this.status = status;
         this.message = message;
     }

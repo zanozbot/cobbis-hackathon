@@ -1,4 +1,4 @@
-package si.zanozbot.cobbishack;
+package si.zanozbot.cobisshackathon;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("si.zanozbot.cobbishack", appContext.getPackageName());
+        assertEquals("si.zanozbot.cobisshackathon", appContext.getPackageName());
     }
 }

@@ -1,25 +1,18 @@
-package si.zanozbot.cobbishack;
+package si.zanozbot.cobisshackathon;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Toast;
-
 import com.google.android.material.snackbar.Snackbar;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import me.dm7.barcodescanner.zbar.BarcodeFormat;
 import me.dm7.barcodescanner.zbar.Result;
 import me.dm7.barcodescanner.zbar.ZBarScannerView;
@@ -31,9 +24,9 @@ import retrofit2.Response;
 public class Scanner extends AppCompatActivity implements ZBarScannerView.ResultHandler {
 
     private ZBarScannerView mScannerView;
-    private static String TAG = "COBBIS_HACKATHON";
+    private static String TAG = "COBISS_HACKATHON";
     private List<BarcodeFormat> mFormats = new ArrayList<>();
-    private CobbisService cobbisService;
+    private CobissService cobissService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +37,8 @@ public class Scanner extends AppCompatActivity implements ZBarScannerView.Result
         setContentView(R.layout.activity_scanner);
 
 
-        // Initialization of Cobbis Service
-        cobbisService = RetrofitClientInstance.getRetrofitInstance().create(CobbisService.class);
+        // Initialization of CobissService
+        cobissService = RetrofitClientInstance.getRetrofitInstance().create(CobissService.class);
 
         mFormats.add(BarcodeFormat.UPCA);
         mFormats.add(BarcodeFormat.CODE39);
@@ -73,23 +66,23 @@ public class Scanner extends AppCompatActivity implements ZBarScannerView.Result
     }
 
     private void sendScannedCode(final String number) {
-        Call<CobbisModel> call = cobbisService.scan(number);
-        call.enqueue(new Callback<CobbisModel>() {
+        Call<CobissModel> call = cobissService.scan(number);
+        call.enqueue(new Callback<CobissModel>() {
             @Override
-            public void onResponse(Call<CobbisModel> call, Response<CobbisModel> response) {
+            public void onResponse(Call<CobissModel> call, Response<CobissModel> response) {
                 handleResponseStatus(response.body());
                 updateData(response.body(), number);
             }
 
             @Override
-            public void onFailure(Call<CobbisModel> call, Throwable t) {
+            public void onFailure(Call<CobissModel> call, Throwable t) {
                 MediaPlayer sound = MediaPlayer.create(Scanner.this, R.raw.napaka);
                 sound.start();
             }
         });
     }
 
-    private void handleResponseStatus(CobbisModel response) {
+    private void handleResponseStatus(CobissModel response) {
         Log.d(TAG, response.getStatus().toString());
 
         MediaPlayer sound = MediaPlayer.create(Scanner.this, R.raw.napaka);
@@ -114,7 +107,7 @@ public class Scanner extends AppCompatActivity implements ZBarScannerView.Result
         mScannerView.resumeCameraPreview(this);
     }
 
-    private void updateData(CobbisModel model, String number) {
+    private void updateData(CobissModel model, String number) {
         ArrayList<DataModel> list = DataSingleton.instance.getState();
         list.add(new DataModel(model.getMessage(), number));
         DataSingleton.instance.setState(list);

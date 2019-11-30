@@ -1,4 +1,4 @@
-package si.zanozbot.cobbishack;
+package si.zanozbot.cobisshackathon;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -20,10 +20,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
-    private static String TAG = "COBBIS_HACKATHON";
-    private CobbisService cobbisService;
+    private static String TAG = "COBISS_HACKATHON";
+    private CobissService cobissService;
     private ListView listView;
     private LinearLayout mLinearLayout;
     private FloatingActionButton mFab;
@@ -44,8 +44,8 @@ public class MainActivity extends AppCompatActivity{
         CustomArrayAdapter mAdapter = new CustomArrayAdapter(this, DataSingleton.instance.getState());
         listView.setAdapter(mAdapter);
 
-        // Initialization of Cobbis Service
-        cobbisService = RetrofitClientInstance.getRetrofitInstance().create(CobbisService.class);
+        // Initialization of CobissService
+        cobissService = RetrofitClientInstance.getRetrofitInstance().create(CobissService.class);
 
         mFab = findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
@@ -84,10 +84,10 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void startScanning() {
-        Call<CobbisModel> call = cobbisService.start();
-        call.enqueue(new Callback<CobbisModel>() {
+        Call<CobissModel> call = cobissService.start();
+        call.enqueue(new Callback<CobissModel>() {
             @Override
-            public void onResponse(Call<CobbisModel> call, Response<CobbisModel> response) {
+            public void onResponse(Call<CobissModel> call, Response<CobissModel> response) {
                 Log.d(TAG, response.message());
                 DataSingleton.instance.resetState();
                 Intent intent = new Intent(MainActivity.this, Scanner.class);
@@ -95,17 +95,17 @@ public class MainActivity extends AppCompatActivity{
             }
 
             @Override
-            public void onFailure(Call<CobbisModel> call, Throwable t) {
+            public void onFailure(Call<CobissModel> call, Throwable t) {
                 playError();
             }
         });
     }
 
     private void stopScanning() {
-        Call<CobbisModel> call = cobbisService.stop();
-        call.enqueue(new Callback<CobbisModel>() {
+        Call<CobissModel> call = cobissService.stop();
+        call.enqueue(new Callback<CobissModel>() {
             @Override
-            public void onResponse(Call<CobbisModel> call, Response<CobbisModel> response) {
+            public void onResponse(Call<CobissModel> call, Response<CobissModel> response) {
                 if (response.body().getStatus() == 21) {
                     Toast.makeText(MainActivity.this, "Vse kode niso bile skenirane.", Toast.LENGTH_LONG).show();
                 } else {
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity{
             }
 
             @Override
-            public void onFailure(Call<CobbisModel> call, Throwable t) {
+            public void onFailure(Call<CobissModel> call, Throwable t) {
                 playError();
             }
         });

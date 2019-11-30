@@ -1,4 +1,4 @@
-package si.zanozbot.cobbishack;
+package si.zanozbot.cobisshackathon;
 
 public class DataModel {
 

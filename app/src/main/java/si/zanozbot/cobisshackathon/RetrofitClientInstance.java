@@ -1,4 +1,4 @@
-package si.zanozbot.cobbishack;
+package si.zanozbot.cobisshackathon;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
