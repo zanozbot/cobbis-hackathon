@@ -13,6 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -101,7 +103,9 @@ public class MainActivity extends AppCompatActivity{
         call.enqueue(new Callback<CobbisModel>() {
             @Override
             public void onResponse(Call<CobbisModel> call, Response<CobbisModel> response) {
-                Log.d(TAG, response.message());
+                if (response.body().getStatus() == 21) {
+                    Toast.makeText(MainActivity.this, "Vse kode niso bile skenirane.", Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override
