@@ -5,6 +5,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,9 @@ import java.util.List;
 import me.dm7.barcodescanner.zbar.BarcodeFormat;
 import me.dm7.barcodescanner.zbar.Result;
 import me.dm7.barcodescanner.zbar.ZBarScannerView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class Scanner extends AppCompatActivity implements ZBarScannerView.ResultHandler {
@@ -22,11 +26,15 @@ public class Scanner extends AppCompatActivity implements ZBarScannerView.Result
     private ZBarScannerView mScannerView;
     private static String TAG = "COBBIS_HACKATHON";
     private List<BarcodeFormat> mFormats = new ArrayList<>();
+    private CobbisService cobbisService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanner);
+
+        // Initialization of Cobbis Service
+        cobbisService = RetrofitClientInstance.getRetrofitInstance().create(CobbisService.class);
 
         mFormats.add(BarcodeFormat.UPCA);
         mFormats.add(BarcodeFormat.CODE39);
@@ -53,12 +61,35 @@ public class Scanner extends AppCompatActivity implements ZBarScannerView.Result
         mScannerView.stopCamera();           // Stop camera on pause
     }
 
+    private void sendScannedCode(String number) {
+        Call<CobbisModel> call = cobbisService.scan(number);
+        call.enqueue(new Callback<CobbisModel>() {
+            @Override
+            public void onResponse(Call<CobbisModel> call, Response<CobbisModel> response) {
+                handleResponseStatus(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<CobbisModel> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void handleResponseStatus(CobbisModel response) {
+        Log.d(TAG, response.getStatus().toString());
+        mScannerView.resumeCameraPreview(this);
+    }
+
     @Override
     public void handleResult(Result rawResult) {
-        Log.v(TAG, rawResult.getContents()); // Prints scan results
+        String number = rawResult.getContents();
+        BarcodeFormat format = rawResult.getBarcodeFormat();
 
+        if (format == BarcodeFormat.UPCA) {
+            number = number.substring(0, number.length() - 1);
+        }
 
-
-        mScannerView.resumeCameraPreview(this);
+        this.sendScannedCode(number);
     }
 }
