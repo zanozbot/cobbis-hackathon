@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Cobbis Hackathon</string>
+    <string name="app_name">Cobbis Popis</string>
     <string name="action_start">Start</string>
     <string name="action_stop">Stop</string>
     <string name="action_more">Preglej</string>
